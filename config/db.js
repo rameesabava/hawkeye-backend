@@ -103,8 +103,8 @@ async function initDB() {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         `);
 
-        // Check if admin user exists, if not create default admin
-        const [adminRows] = await connection.query(`SELECT * FROM users WHERE email = 'hawkeyevisioncok@gmail.com' LIMIT 1`);
+        // Check if any admin user exists, if not create default admin
+        const [adminRows] = await connection.query(`SELECT * FROM users WHERE role = 'admin' LIMIT 1`);
         if (adminRows.length === 0) {
             const adminPass = await bcrypt.hash('admin123', 10);
             await connection.query(
