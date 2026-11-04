@@ -1,16 +1,27 @@
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'hawkeye_vision',
-    port: process.env.DB_PORT || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+const poolConfig = process.env.DATABASE_URL
+    ? {
+        uri: process.env.DATABASE_URL,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        ssl: { rejectUnauthorized: false }
+    }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'hawkeye_vision',
+        port: Number(process.env.DB_PORT) || 3306,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+    };
+
+const pool = mysql.createPool(poolConfig);
 
 async function initDB() {
     try {
@@ -93,14 +104,14 @@ async function initDB() {
         `);
 
         // Check if admin user exists, if not create default admin
-        const [adminRows] = await connection.query(`SELECT * FROM users WHERE role = 'admin' LIMIT 1`);
+        const [adminRows] = await connection.query(`SELECT * FROM users WHERE email = 'hawkeyevisioncok@gmail.com' LIMIT 1`);
         if (adminRows.length === 0) {
             const adminPass = await bcrypt.hash('admin123', 10);
             await connection.query(
                 `INSERT INTO users (username, email, password, phone, role) VALUES (?, ?, ?, ?, 'admin')`,
-                ['Hawkeye Admin', 'admin@hawkeye.com', adminPass, '9876543210']
+                ['Hawkeye Admin', 'hawkeyevisioncok@gmail.com', adminPass, '8891457889']
             );
-            console.log("Default admin account created: admin@hawkeye.com / admin123");
+            console.log("Default admin account created: hawkeyevisioncok@gmail.com / admin123");
         }
 
         // Check if any products exist, if not seed initial products with real models, brands, categories
