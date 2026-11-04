@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET || "hawkeye_super_secret_jwt_key_2026";
 
 // Register user
 exports.registerController = async (req, res) => {
@@ -67,7 +68,7 @@ exports.loginController = async (req, res) => {
 
         const token = jwt.sign(
             { email: existingUser.email, role: existingUser.role },
-            process.env.JWT_SECRET,
+            JWT_SECRET,
             { expiresIn: "7d" }
         );
 
@@ -268,7 +269,7 @@ exports.updateMyProfileController = async (req, res) => {
         // Issue fresh token
         const token = jwt.sign(
             { email: normalizedEmail, role: user.role },
-            process.env.JWT_SECRET,
+            JWT_SECRET,
             { expiresIn: "7d" }
         );
 

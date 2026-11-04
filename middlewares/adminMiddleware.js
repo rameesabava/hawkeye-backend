@@ -1,5 +1,5 @@
-
 const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET || "hawkeye_super_secret_jwt_key_2026";
 
 const adminMiddleware = (req, res, next) => {
     console.log("Inside adminMiddleware");
@@ -29,10 +29,10 @@ const adminMiddleware = (req, res, next) => {
     try {
         const jwtResponse = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            JWT_SECRET
         );
-console.log("Frontend token email:", jwtResponse.email);
-console.log("Frontend token role:", jwtResponse.role);
+        console.log("Frontend token email:", jwtResponse.email);
+        console.log("Frontend token role:", jwtResponse.role);
 
         req.payload = jwtResponse.email;
         req.role = jwtResponse.role;
@@ -47,10 +47,9 @@ console.log("Frontend token role:", jwtResponse.role);
         return next();
     } catch (error) {
         console.error("Admin authentication error:", error.message);
-
         return res.status(401).json({
             success: false,
-            message: "Invalid or expired token. Please log in again.",
+            message: "Invalid or expired token. Please log in as admin again.",
         });
     }
 };
