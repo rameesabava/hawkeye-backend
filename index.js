@@ -5,6 +5,11 @@ const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const routes = require('./routes/allRoutes')
+const path = require('path')
+const fs = require('fs')
+
+const uploadDir = path.join(__dirname, 'uploads')
+fs.mkdirSync(uploadDir, { recursive: true })
 
 const server = express()
 
@@ -66,7 +71,7 @@ server.use(apiLimiter)
 
 // 5. Routes and Static uploads
 server.use(routes)
-server.use('/uploads', express.static('./uploads'))
+server.use('/uploads', express.static(uploadDir))
 
 const PORT = parseInt(process.env.PORT, 10) || 5000
 
