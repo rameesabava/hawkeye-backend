@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 const productController = require('../controllers/productController');
 const cartController = require('../controllers/cartController');
 const orderController = require('../controllers/orderController');
@@ -15,6 +16,8 @@ const router = new express.Router();
 router.post('/register', userController.registerController);
 // Login
 router.post('/login', userController.loginController);
+// Logout (public endpoint)
+router.post('/logout', authController.logoutController);
 // Get all products (supports ?search=&category=&brand=)
 router.get('/products', productController.getAllProductsController);
 // View single product (public or authenticated)
