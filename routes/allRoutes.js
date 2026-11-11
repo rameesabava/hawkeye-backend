@@ -5,6 +5,7 @@ const productController = require('../controllers/productController');
 const cartController = require('../controllers/cartController');
 const orderController = require('../controllers/orderController');
 const reviewController = require('../controllers/reviewController');
+const contactController = require('../controllers/contactController');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const jwtMiddleware = require('../middlewares/jwtMiddleware');
 const multerMiddleware = require('../middlewares/multerMiddleware');
@@ -63,5 +64,8 @@ router.put("/myOrders/cancel/:id", jwtMiddleware, orderController.cancelMyOrderC
 
 // Reviews
 router.post('/review/add', jwtMiddleware, reviewController.addReviewController);
+
+// contact
+router.post('/send', contactController.sendContactEmail)
 
 module.exports = router;
